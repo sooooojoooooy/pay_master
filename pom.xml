@@ -224,17 +224,6 @@
 	</build>
 
 	<profiles>
-		<!-- compile -Dmaven.test.skip=true -Pdev -->
-		<profile>
-			<id>dev</id>
-			<build>
-				<resources>
-					<resource>
-						<directory>${profiles.dir}/dev</directory>
-					</resource>
-				</resources>
-			</build>
-		</profile>
 		<profile>
 			<id>product</id>
 			<build>
