@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html ng-app="app">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>订单管理中心</title>
+    <meta name="Copyright" content="Douco Design."/>
+    <link href="resources/model/css/public.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="resources/model/js/jquery.min.js"></script>
+    <script type="text/javascript" src="resources/model/js/global.js"></script>
+    <script type="text/javascript" src="resources/angular.min.js"></script>
+</head>
+<body ng-controller="appController">
+{{data}}
+</body>
+<script type="text/javascript">
+    var app = angular.module("app", []);
+    app.controller("appController", function ($http, $scope) {
+        $http({
+            url: "memory/getMemoryInfo",
+            contentType: "application/x-www-form-urlencoded",
+            method: 'GET'
+        }).success(function (ret) {
+            $scope.data = ret.data;
+        }).error(function (data) {
+        });
+    });
+</script>
+</html>
