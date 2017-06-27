@@ -29,7 +29,7 @@ import com.pay.main.payment.vo.RMSendNotifyVO;
 
 /**
  * 支付通用方法
- * 
+ *
  * @author Guo
  */
 @Service("payCore")
@@ -45,7 +45,7 @@ public class PayCore {
 
 	/**
 	 * 获取客户端下单参数（必传merId,商户sign）
-	 * 
+	 *
 	 * @param keyStr
 	 *            获取参数名，逗号分割
 	 * @return
@@ -96,7 +96,7 @@ public class PayCore {
 
 	/**
 	 * 动态获取下单详情
-	 * 
+	 *
 	 * @param code
 	 * @return
 	 */
@@ -140,7 +140,7 @@ public class PayCore {
 
 	/**
 	 * 数据库入库1.0（汇元支付使用）
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean payOrder(String merId, String merDescribe, String tradeNo, String merchantNo, String pChannel, String prince, String pTitle, String pAttach, String pType, String code, String notifyUrl) {
@@ -158,7 +158,7 @@ public class PayCore {
 
 	/**
 	 * 数据库入库2.0
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean savePayOrder(Map<String, String> params, boolean bool) {
@@ -198,7 +198,7 @@ public class PayCore {
 
 	/**
 	 * 发送异步数据给商户
-	 * 
+	 *
 	 * @param payChannel
 	 * @return
 	 */

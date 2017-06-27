@@ -20,6 +20,13 @@
 		select
 		<include refid="Base_Column_List" />
 		from user_login
-		where ul_merId = #{ulMerId}
+		where ul_merId = #{merId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByUserPwd" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from user_login
+		where ul_username = #{username,jdbcType=VARCHAR}
+		AND ul_password = #{password,jdbcType=VARCHAR}
 	</select>
 </mapper>

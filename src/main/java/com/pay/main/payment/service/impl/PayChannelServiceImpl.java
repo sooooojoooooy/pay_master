@@ -49,7 +49,7 @@ public class PayChannelServiceImpl implements IPayChannelService {
 		try {
 			payChannel = payChannelMapper.selectByPrimaryKey(tradeNo);
 		} catch (Exception ex) {
-			logger.error("PayChannelServiceImpl-selectByPrimaryKey is error:", ex);
+			logger.error("PayChannelServiceImpl-selectByUserPwd is error:", ex);
 		}
 		return payChannel;
 	}
