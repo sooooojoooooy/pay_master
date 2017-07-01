@@ -12,4 +12,6 @@ public interface IUserLoginService {
 	public Map<String, Object> getLoginAccount(HttpServletRequest request, String username, String password, String captcha);
 	
 	public boolean getOutLogin(HttpServletRequest request, HttpServletResponse response);
+
+	Map<String,Object> changePwd(String oldPassWord, String newPassWord, String name);
 }

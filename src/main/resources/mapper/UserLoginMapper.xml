@@ -29,4 +29,14 @@
 		where ul_username = #{username,jdbcType=VARCHAR}
 		AND ul_password = #{password,jdbcType=VARCHAR}
 	</select>
+	<update id="updatePwd" parameterType="java.lang.Integer">
+		update user_login
+		<set>
+			<if test="newPassWord != null">
+				ul_password = #{newPassWord,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ul_username = #{userName,jdbcType=VARCHAR}
+		AND ul_password = #{oldPassWord,jdbcType=VARCHAR}
+	</update>
 </mapper>
