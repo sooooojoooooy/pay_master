@@ -1,4 +1,4 @@
-package com.pay.main.payment.config;
+package com.pay.main.payment.web;
 
 import com.pay.main.payment.entity.UserLogin;
 import com.pay.main.payment.service.IUserLoginService;
