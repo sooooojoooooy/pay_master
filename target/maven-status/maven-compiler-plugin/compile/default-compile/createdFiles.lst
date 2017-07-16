@@ -39,6 +39,7 @@ com/pay/main/payment/service/impl/UserInfoServiceImpl.class
 com/pay/main/payment/util/PropertyUtil.class
 com/pay/main/payment/util/FileIOUtils.class
 com/pay/main/payment/web/SwiftpassPayController.class
+com/pay/main/payment/web/PayItemController.class
 com/pay/main/payment/service/IMyPayService.class
 com/pay/main/payment/thread/PayNoticeThread.class
 com/pay/main/payment/dao/PaySummaryMapper.class

@@ -28,7 +28,7 @@
 
     <sql id="Base_Column_List">
 		id, mer_id, mer_describe, trade_no, merchant_no, channel_no, wechat_no, p_channel, p_fee, p_title,
-		p_attach, p_type, p_time, p_state, create_time, modified_time, app_id, notify_url
+		p_attach, p_type, p_time, p_state, create_time, modified_time, app_id, notify_url,notify_state
 	</sql>
 
     <select id="selectByPrimaryKey" resultMap="BaseResultMap">
@@ -36,6 +36,43 @@
         <include refid="Base_Column_List"/>
         from pay_channel
         where trade_no = #{tradeNo,jdbcType=VARCHAR}
+    </select>
+    <select id="selectItem" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from pay_channel
+        where p_time BETWEEN #{startTime} AND #{endTime}
+        AND mer_id = #{merId}
+        AND p_state = 1
+        <if test="payType > 0">
+            AND p_type = #{payType}
+        </if>
+        ORDER BY p_time DESC
+    </select>
+    <select id="selectOne" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from pay_channel
+        where mer_id = #{merId}
+        <if test="merNo != null and merNo != ''">
+            AND merchant_no = #{merNo}
+        </if>
+        <if test="platformNo != null and platformNo != ''">
+            AND trade_no = #{platformNo}
+        </if>
+        <if test="payNo != null and payNo != ''">
+            AND wechat_no = #{payNo}
+        </if>
+        ORDER BY p_time DESC
+    </select>
+    <select id="getReCallback" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from pay_channel
+        where mer_id = #{merId}
+        AND notify_state = 0
+        AND p_state = 1
+        ORDER BY p_time DESC
     </select>
     <select id="selectByPrimaryKeyMer" resultMap="BaseResultMap">
         select

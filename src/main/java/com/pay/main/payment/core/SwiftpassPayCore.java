@@ -22,6 +22,9 @@ import org.xml.sax.InputSource;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -204,9 +207,15 @@ public class SwiftpassPayCore {
 		payChannel.setpType(payType); // 支付方式
 		payChannel.setpState(1); // 支付状态为成功
 		payChannel.setpFee(fee); // 金额
-		payChannel.setpTime(date);
 		payChannel.setModifiedTime(date);
-		
+		DateFormat fmt =new SimpleDateFormat("yyyyMMddHHmmss");
+		Date pDate = new Date();
+		try {
+			pDate = fmt.parse(vo.get("time_end"));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		payChannel.setpTime(pDate);
 		// 修改数据库值
 		boolean bool = false;
 		try {

@@ -1,7 +1,9 @@
 package com.pay.main.payment.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
+import com.pay.main.payment.entity.PaySummaryEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,5 +83,38 @@ public class PayChannelServiceImpl implements IPayChannelService {
             return false;
         }
         return false;
+    }
+
+    @Override
+    public List<PayChannel> getSelectItem(String ulMerId, String startDate, String endDate,String payType) {
+        List<PayChannel> payChannel = null;
+        try {
+            payChannel = payChannelMapper.selectItem(ulMerId,startDate,endDate,payType);
+        } catch (Exception ex) {
+            logger.error("PayChannelServiceImpl-selectByUserPwd is error:", ex);
+        }
+        return payChannel;
+    }
+
+    @Override
+    public List<PayChannel> getSelectOne(String ulMerId, String merNo, String platformNo, String payNo) {
+        List<PayChannel> payChannel = null;
+        try {
+            payChannel = payChannelMapper.selectOne(ulMerId,merNo,platformNo,payNo);
+        } catch (Exception ex) {
+            logger.error("PayChannelServiceImpl-selectByUserPwd is error:", ex);
+        }
+        return payChannel;
+    }
+
+    @Override
+    public List<PayChannel> getReCallback(String ulMerId) {
+        List<PayChannel> payChannel = null;
+        try {
+            payChannel = payChannelMapper.getReCallback(ulMerId);
+        } catch (Exception ex) {
+            logger.error("PayChannelServiceImpl-selectByUserPwd is error:", ex);
+        }
+        return payChannel;
     }
 }

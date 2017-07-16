@@ -48,14 +48,6 @@ public class PayChannel {
 
 	private String ext5;
 
-	public String getNotifyState() {
-		return notifyState;
-	}
-
-	public void setNotifyState(String notifyState) {
-		this.notifyState = notifyState;
-	}
-
 	private String notifyState;
 
 	public PayChannel() {
@@ -97,6 +89,13 @@ public class PayChannel {
 		this.createTime = createTime;
 		this.appId = appId;
 		this.notifyUrl = notifyUrl;
+	}
+	public String getNotifyState() {
+		return notifyState;
+	}
+
+	public void setNotifyState(String notifyState) {
+		this.notifyState = notifyState;
 	}
 
 	public Integer getId() {
