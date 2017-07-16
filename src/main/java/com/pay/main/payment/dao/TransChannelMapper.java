@@ -1,11 +1,12 @@
 package com.pay.main.payment.dao;
 
+import com.pay.main.payment.entity.PayChannel;
+import com.pay.main.payment.entity.TransChannel;
+
 import java.util.Map;
 
-import com.pay.main.payment.entity.PayChannel;
-import org.apache.ibatis.annotations.Param;
-
-public interface PayChannelMapper {
+public interface TransChannelMapper {
+	
 	public int insertSelective(Map<String, Object> param);
 	
 	public int updateByPrimaryKeySelective(Map<String, Object> param);
@@ -16,7 +17,4 @@ public interface PayChannelMapper {
 	// 根据商户ID和商户订单号退款
 	public PayChannel selectByPrimaryKeyMer(String tradeNo, String merNo);
 
-	public int updateByPrimaryKey(PayChannel record);
-
-	int updateNotifyState(@Param("tradeNo") String tradeNo);
 }

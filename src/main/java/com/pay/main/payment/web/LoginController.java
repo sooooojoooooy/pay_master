@@ -87,6 +87,11 @@ public class LoginController {
 			String name = userlogin.getUlUsername();
 			return ReturnUtils.successInfo(name);
 		}
+		try{
+
+		}catch (NullPointerException ex){
+			throw new NullPointerException("");
+		}
 		return ReturnUtils.failInfo("The user is not logged in or logged out!");
 	}
 	/**

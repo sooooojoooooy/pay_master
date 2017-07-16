@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +18,7 @@ import java.util.Map;
  * @author Guo
  */
 @Controller
-@RequestMapping("memory")
+@RequestMapping("test")
 public class MemoryController {
 	Logger logger = LoggerFactory.getLogger(MemoryController.class);
 
@@ -35,5 +37,23 @@ public class MemoryController {
 		logger.error(rtnList.toString());
 		System.err.println(rtnList.toString());
 		return rtnList;
+	}
+
+	@RequestMapping(value = "/test_notify", method = RequestMethod.POST)
+	public @ResponseBody String test(HttpServletRequest request) {
+		BufferedReader br = null;
+		String str = null;
+		String wholeStr = null;
+		try {
+			br = request.getReader();
+			while ((str = br.readLine()) != null) {
+				wholeStr += str;
+			}
+			System.err.println("回调测试:" + wholeStr);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return "success";
 	}
 }

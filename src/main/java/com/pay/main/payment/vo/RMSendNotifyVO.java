@@ -6,42 +6,55 @@ package com.pay.main.payment.vo;
  * @author Guo
  */
 public class RMSendNotifyVO {
-	private String merNo; // 商户订单号
-	private String title; // 订单名
-	private String attach; // 用户参数
-	private String prince; // 订单金额
-	private String state; // 支付状态
-	private String type; // 支付类型
-	private String appId; // 产品ID
-	private String sign;
-
-	public RMSendNotifyVO(String merNo, String title, String attach,
-			String prince, String state, String type, String appId, String sign) {
-		super();
-		this.merNo = merNo;
-		this.title = title;
+	public RMSendNotifyVO(String mch_id, String out_trade_no,
+						  String attach, String body, String state,
+						  String total_fee, String platform_no,
+						  String pay_no,String pay_type ,String sign) {
+		this.mch_id = mch_id;
+		this.out_trade_no = out_trade_no;
 		this.attach = attach;
-		this.prince = prince;
+		this.body = body;
 		this.state = state;
-		this.type = type;
-		this.appId = appId;
+		this.total_fee = total_fee;
+		this.platform_no = platform_no;
+		this.pay_no = pay_no;
+		this.pay_type = pay_type;
 		this.sign = sign;
 	}
 
-	public String getMerNo() {
-		return merNo;
+	private String mch_id; // 商户订单号
+	private String out_trade_no; // 商户订单号
+	private String attach; // 用户参数
+	private String body; // 订单描述
+	private String state; // 支付状态
+	private String total_fee; // 支付类型
+	private String platform_no; // 平台订单号
+	private String pay_no; // 支付订单号
+	private String sign; // 签名
+	private String pay_type; // 支付方式
+
+	public String getPay_type() {
+		return pay_type;
 	}
 
-	public void setMerNo(String merNo) {
-		this.merNo = merNo;
+	public void setPay_type(String pay_type) {
+		this.pay_type = pay_type;
 	}
 
-	public String getTitle() {
-		return title;
+	public String getMch_id() {
+		return mch_id;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setMch_id(String mch_id) {
+		this.mch_id = mch_id;
+	}
+
+	public String getOut_trade_no() {
+		return out_trade_no;
+	}
+
+	public void setOut_trade_no(String out_trade_no) {
+		this.out_trade_no = out_trade_no;
 	}
 
 	public String getAttach() {
@@ -52,12 +65,12 @@ public class RMSendNotifyVO {
 		this.attach = attach;
 	}
 
-	public String getPrince() {
-		return prince;
+	public String getBody() {
+		return body;
 	}
 
-	public void setPrince(String prince) {
-		this.prince = prince;
+	public void setBody(String body) {
+		this.body = body;
 	}
 
 	public String getState() {
@@ -68,20 +81,28 @@ public class RMSendNotifyVO {
 		this.state = state;
 	}
 
-	public String getType() {
-		return type;
+	public String getTotal_fee() {
+		return total_fee;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setTotal_fee(String total_fee) {
+		this.total_fee = total_fee;
 	}
 
-	public String getAppId() {
-		return appId;
+	public String getPlatform_no() {
+		return platform_no;
 	}
 
-	public void setAppId(String appId) {
-		this.appId = appId;
+	public void setPlatform_no(String platform_no) {
+		this.platform_no = platform_no;
+	}
+
+	public String getPay_no() {
+		return pay_no;
+	}
+
+	public void setPay_no(String pay_no) {
+		this.pay_no = pay_no;
 	}
 
 	public String getSign() {
@@ -94,9 +115,16 @@ public class RMSendNotifyVO {
 
 	@Override
 	public String toString() {
-		return "RMSendNotifyVO [merNo=" + merNo + ", title=" + title
-				+ ", attach=" + attach + ", prince=" + prince + ", state="
-				+ state + ", type=" + type + ", appId=" + appId + ", sign="
-				+ sign + "]";
+		return "RMSendNotifyVO{" +
+				"mch_id='" + mch_id + '\'' +
+				", out_trade_no='" + out_trade_no + '\'' +
+				", attach='" + attach + '\'' +
+				", body='" + body + '\'' +
+				", state='" + state + '\'' +
+				", total_fee='" + total_fee + '\'' +
+				", platform_no='" + platform_no + '\'' +
+				", pay_no='" + pay_no + '\'' +
+				", sign='" + sign + '\'' +
+				'}';
 	}
 }

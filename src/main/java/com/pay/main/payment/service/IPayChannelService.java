@@ -17,4 +17,6 @@ public interface IPayChannelService {
 	int updateByPrimaryKeySelective(PayChannel record);
 
 	int updateByPrimaryKey(PayChannel record);
+
+    boolean updateNotifyState(String tradeNo);
 }

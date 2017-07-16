@@ -20,14 +20,12 @@ public class DataFormatUtil {
 	/**
 	 * 生成制定前缀的32位随机数
 	 * 
-	 * @param prefix
 	 * @return
 	 */
-	public static String getONLYID32(String prefix) {
+	public static String getONLYID32() {
 		String uuid = UUID.randomUUID().toString().replace("-", "");
 		StringBuffer sb = new StringBuffer();
 		Date currentTime = new Date();
-		sb.append(prefix);
 		sb.append(formatter2.format(currentTime));
 		sb.append(uuid.substring(0, 32 - sb.length()));
 		return sb.toString();

@@ -14,4 +14,6 @@ public interface IUserLoginService {
 	public boolean getOutLogin(HttpServletRequest request, HttpServletResponse response);
 
 	Map<String,Object> changePwd(String oldPassWord, String newPassWord, String name);
+
+
 }

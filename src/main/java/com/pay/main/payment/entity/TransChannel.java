@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * 数据库实体类
  */
-public class PayChannel {
+public class TransChannel {
 	private Integer id;
 
 	private String merId;
@@ -42,27 +42,18 @@ public class PayChannel {
 
 	private String notifyUrl;
 
-	private String ext3;
+	private Integer notifyState;
 
 	private String ext4;
 
 	private String ext5;
 
-	public String getNotifyState() {
-		return notifyState;
-	}
 
-	public void setNotifyState(String notifyState) {
-		this.notifyState = notifyState;
-	}
-
-	private String notifyState;
-
-	public PayChannel() {
+	public TransChannel() {
 		super();
 	}
 
-	public PayChannel(String merId, String merDescribe, String tradeNo, String merchantNo, String pChannel, String prince, String pTitle, String pAttach, String pType, Date pTime, int pState, Date createTime, String appId, String notifyUrl) {
+	public TransChannel(String merId, String merDescribe, String tradeNo, String merchantNo, String pChannel, String prince, String pTitle, String pAttach, String pType, Date pTime, int pState, Date createTime, String appId, String notifyUrl) {
 		// 处理数据
 		float pFee = Float.parseFloat(prince);
 		Integer type = 0;
@@ -243,12 +234,12 @@ public class PayChannel {
 		this.notifyUrl = notifyUrl;
 	}
 
-	public String getExt3() {
-		return ext3;
+	public Integer getNotifyState() {
+		return notifyState;
 	}
 
-	public void setExt3(String ext3) {
-		this.ext3 = ext3;
+	public void setNotifyState(Integer notifyState) {
+		this.notifyState = notifyState;
 	}
 
 	public String getExt4() {
@@ -269,6 +260,50 @@ public class PayChannel {
 
 	@Override
 	public String toString() {
-		return "PayChannel [id=" + id + ", merId=" + merId + ", merDescribe=" + merDescribe + ", tradeNo=" + tradeNo + ", merchantNo=" + merchantNo + ", channelNo=" + channelNo + ", wechatNo=" + wechatNo + ", pChannel=" + pChannel + ", pFee=" + pFee + ", pTitle=" + pTitle + ", pAttach=" + pAttach + ", pType=" + pType + ", pTime=" + pTime + ", pState=" + pState + ", createTime=" + createTime + ", modifiedTime=" + modifiedTime + ", appId=" + appId + ", notifyUrl=" + notifyUrl + ", ext3=" + ext3 + ", ext4=" + ext4 + ", ext5=" + ext5 + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("TransChannel [id=");
+		builder.append(id);
+		builder.append(", merId=");
+		builder.append(merId);
+		builder.append(", merDescribe=");
+		builder.append(merDescribe);
+		builder.append(", tradeNo=");
+		builder.append(tradeNo);
+		builder.append(", merchantNo=");
+		builder.append(merchantNo);
+		builder.append(", channelNo=");
+		builder.append(channelNo);
+		builder.append(", wechatNo=");
+		builder.append(wechatNo);
+		builder.append(", pChannel=");
+		builder.append(pChannel);
+		builder.append(", pFee=");
+		builder.append(pFee);
+		builder.append(", pTitle=");
+		builder.append(pTitle);
+		builder.append(", pAttach=");
+		builder.append(pAttach);
+		builder.append(", pType=");
+		builder.append(pType);
+		builder.append(", pTime=");
+		builder.append(pTime);
+		builder.append(", pState=");
+		builder.append(pState);
+		builder.append(", createTime=");
+		builder.append(createTime);
+		builder.append(", modifiedTime=");
+		builder.append(modifiedTime);
+		builder.append(", appId=");
+		builder.append(appId);
+		builder.append(", notifyUrl=");
+		builder.append(notifyUrl);
+		builder.append(", notify_state=");
+		builder.append(notifyState);
+		builder.append(", ext4=");
+		builder.append(ext4);
+		builder.append(", ext5=");
+		builder.append(ext5);
+		builder.append("]");
+		return builder.toString();
 	}
 }

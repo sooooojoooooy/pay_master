@@ -31,7 +31,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from switch_merchant
-		where appid = #{appid}
+		where mchid = #{appid}
 	</select>
 	
 	<select id="selectAutoList" resultMap="BaseResultMap">

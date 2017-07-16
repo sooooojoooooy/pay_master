@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.pay.main.payment.config.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,29 +67,29 @@ public class PayCore {
 
 		// 判断用户是否开启支付
 		Integer ulPaystate = 0;
-		UserLogin userInfo = userLoginService.getByPrimaryKey(params.get("merId") + "");
+		UserLogin userInfo = userLoginService.getByPrimaryKey(params.get("mch_id").toString());
 		ulPaystate = null != userInfo ? userInfo.getUlPaystate() : 0;
 		if (ulPaystate != 1) {
-			return ReturnUtil.returnFail("该商户号不可用");
+			return ReturnUtil.returnFail("非法商户号！",1001);
 		}
 
 		// 判断签名正确性
 		Map<String, Object> map = DataProcessUtil.removeNullMap(params);
 		map.remove("sign");
-		String textLink = DataProcessUtil.textLink(map, true); // 拼接字符串
-		String md5s = EncryptionUtil.md5s(textLink + "&&&" + userInfo.getUlSign());
+		String textLink = DataProcessUtil.textLink(map, false); // 拼接字符串
+		String md5s = EncryptionUtil.md5s(textLink + "&" + userInfo.getUlSign());
 		String sign = params.get("sign") + "";
 		if (!md5s.equals(sign)) {
-			String signStr = textLink + "&&&" + userInfo.getUlSign();
+			String signStr = textLink + "&" + userInfo.getUlSign();
 			logger.info("生成签名字符串: " + signStr + " ==> " + md5s + " : " + sign);
-			return ReturnUtil.returnFail("签名错误！");
+			return ReturnUtil.returnFail("签名错误！",1004);
 		}
 
 		// 生成订单号
-		String orderNo = CommonUtil.getOrderNo(params.get("payType") + "");
+		String orderNo = CommonUtil.getOrderNo();
 		params.put("orderNo", orderNo);
 		if (null == orderNo) {
-			return ReturnUtil.returnFail("支付类型错误！");
+			return ReturnUtil.returnFail("未知错误！",1099);
 		}
 
 		return ReturnUtil.returnInfo(params);
@@ -97,63 +98,32 @@ public class PayCore {
 	/**
 	 * 动态获取下单详情
 	 *
-	 * @param code
 	 * @return
 	 */
-	public Map<String, String> getAutoSM(String code) {
-		Map<String, String> map = new HashMap<String, String>();
+	public Map<String, Object> getAutoSM(String appid) {
+		Map<String, Object> map = new HashMap<String, Object>();
 
 		// 处理自动下单和指定下单
-		String appid = null;
 		String mchid = null;
 		boolean boole = false;
-		String[] split = code.split("_");
-		if (split.length == 3) {
-			mchid = split[2];
-			appid = split[0] + "_" + split[1];
-		} else {
-			appid = split[0];
-			boole = true;
-		}
-
 		String INFO_MCHID = null;// 商户号
 		String SIGN_KEY = null;// 签名KEY
+		float TOTAL = 0;
 		// 数据库中查询appid对应的签名
 		SwitchMerchant sm = null;
-		if (!boole) {
-			sm = switchMerchantService.getAutoInfo(appid, mchid);
-		} else {
-			sm = switchMerchantService.getByPrimaryKey(appid);
-		}
+		sm = switchMerchantService.getByPrimaryKey(appid);
 		if (null != sm) {
 			INFO_MCHID = null != sm.getMchid() ? sm.getMchid() : INFO_MCHID;
 			SIGN_KEY = null != sm.getSign() ? sm.getSign() : SIGN_KEY;
+			TOTAL = null != sm.getTotal() ? sm.getTotal() : 0;
 		} else {
-			logger.info("回调信息数据校验CODE未查询到（" + code + "），无法使用，请修改CODE：");
-			logger.error("回调信息数据校验CODE未查询到（" + code + "），无法使用，请修改CODE：", sm.toString());
+			logger.error("回调信息数据校验CODE未查询到（" + appid + "），无法使用，请修改CODE：", null != sm ? sm.toString() : "SwitchMerchant 对象为null");
 		}
 
 		map.put("INFO_MCHID", INFO_MCHID);
 		map.put("SIGN_KEY", SIGN_KEY);
+		map.put("OBJECT_SM", sm);
 		return map;
-	}
-
-	/**
-	 * 数据库入库1.0（汇元支付使用）
-	 *
-	 * @return
-	 */
-	public boolean payOrder(String merId, String merDescribe, String tradeNo, String merchantNo, String pChannel, String prince, String pTitle, String pAttach, String pType, String code, String notifyUrl) {
-		try {
-			// 数据入库
-			PayChannel payEntity = new PayChannel(merId, merDescribe, tradeNo, merchantNo, pChannel, prince, pTitle, pAttach, pType, null, 0, new Date(), code, notifyUrl);
-
-			payChannelService.insertSelective(payEntity);
-		} catch (Exception ex) {
-			logger.error("支付数据入库失败【PayRongMaiController】:", ex);
-			return false;
-		}
-		return true;
 	}
 
 	/**
@@ -162,32 +132,27 @@ public class PayCore {
 	 * @return
 	 */
 	public boolean savePayOrder(Map<String, String> params, boolean bool) {
-		String merId = params.get("merId"); // 商户号
-		String merDescribe = params.get("describe"); // 商户描述
+		String merId = params.get("mch_id"); // 商户号
+		String merDescribe = params.get("body"); // 商户描述
 		String tradeNo = params.get("orderNo"); // 订单号
-		String merchantNo = params.get("merNo"); // 商户订单号
-		String pChannel = params.get("channel"); // 支付渠道
-		String price = params.get("price"); // 支付金额
-		String pTitle = params.get("title"); // 标题名称
+		String merchantNo = params.get("out_trade_no"); // 商户订单号
+		String price = params.get("total_fee"); // 支付金额
+		String pTitle = params.get("body"); // 标题名称
 		String pAttach = params.get("attach"); // 自定义参数
-		String pType = params.get("payType"); // 支付类型
+		String pType = getPayTypeMarkNum(params.get("trade_type")).toString(); // 支付类型
 		Date pTime = null; // 支付成功时间null
 		int pState = 0; // 支付状态默认0
 		Date createTime = new Date(); // 创建时间
-		String code = params.get("code"); // 使用商户标志
-		String notifyUrl = params.get("notifyUrl"); // 商户通知地址
-
+		String notifyUrl = params.get("notify_url"); // 商户通知地址
 		// 分转元
 		if (bool) {
 			Float yuan = Float.parseFloat(price) / 100;
 			price = yuan + "";
 		}
-
 		PayChannel payEntity = null;
 		try {
 			// 数据入库
-			payEntity = new PayChannel(merId, merDescribe, tradeNo, merchantNo, pChannel, price, pTitle, pAttach, pType, pTime, pState, createTime, code, notifyUrl);
-
+			payEntity = new PayChannel(merId, merDescribe, tradeNo, merchantNo, "swiftpass", price, pTitle, pAttach, pType, pTime, pState, createTime, null, notifyUrl);
 			payChannelService.insertSelective(payEntity);
 		} catch (Exception ex) {
 			logger.error("支付数据入库错误-数据：" + payEntity.toString() + "-日志:", ex);
@@ -214,25 +179,25 @@ public class PayCore {
 			String type = payChannel.getpType() + "";
 			String appId = payChannel.getAppId();
 			String notifyUrl = payChannel.getNotifyUrl();
-
 			String merId = payChannel.getMerId();
+			String payNo = payChannel.getWechatNo();
+			String platformNo = payChannel.getTradeNo();
 			UserLogin userInfo = userLoginService.getByPrimaryKey(merId);
-
-			RMSendNotifyVO vo = new RMSendNotifyVO(merNo, title, attach, prince, state, type, appId, null);
+			RMSendNotifyVO vo = new RMSendNotifyVO(merId,merNo,attach,title,state,prince,platformNo,payNo,type,null);
 			Map<String, Object> params = DataProcessUtil.convertBeanNotNullToMap(vo);
 			params.remove("sign"); // 删除sign
 			logger.info("回调信息需要加密数据：" + params);
-			String textLink = DataProcessUtil.textLink(params, true); // 拼接字符串
-			String sign = EncryptionUtil.md5s(textLink + "&&&" + userInfo.getUlSign());
+			String textLink = DataProcessUtil.textLink(params, false); // 拼接字符串
+			String sign = EncryptionUtil.md5s(textLink + "&" + userInfo.getUlSign());
 			params.put("sign", sign); // 添加生成的sign
-
 			String doPost = HttpUtil.doPost(notifyUrl, params, "UTF-8");
 			logger.info("（" + merNo + "）通知商户返回信息：" + doPost);
 			String temp = (doPost + "").toUpperCase().trim();
-			if ("SUCCESS".equals(temp)) {
+			if ("SUCCESS".equals(temp.toUpperCase())) {
+				payChannelService.updateNotifyState(payChannel.getTradeNo());
 				bool = true;
 			} else {
-				// Thread.sleep(5000);
+				bool = false;
 			}
 		} catch (Exception ex) {
 			logger.error("通知商户发送异步数据-sendNotify：", ex);
@@ -240,32 +205,32 @@ public class PayCore {
 		return bool;
 	}
 
-	public static <V> boolean writeNotifyInfo(String channel, String ip, Map<String, V> params) {
-		return writeInfo("notify", channel, "callback", ip, params);
-	}
-
-	public static <V> boolean writeRefundInfo(String channel, String ip, Map<String, V> params) {
-		return writeInfo("refund", channel, "refund", ip, params);
-	}
 
 	/**
-	 * 回调信息写入文档
+	 * 获取支付类型
+	 *
+	 * @param payType
+	 * @return
 	 */
-	private static <V> boolean writeInfo(String mark, String channel, String fileName, String ip, Map<String, V> params) {
-		try {
-			Date date = new Date();
-			String time = DataFormatUtil.currentDateFormat(2, date);
-			String dName = DataFormatUtil.currentDateFormat(0, date);
-			String body = ip + "(" + time + ") -> " + params;
-			File file = new File("/app/logs/pay-main/" + mark + "/" + channel);
-			if (!file.isDirectory()) {
-				file.mkdirs();
+	public Integer getPayTypeMarkNum(String payType) {
+		Integer index = 0;
+		if (null != payType) {
+			if ("unified.trade.pay".equals(payType)) { // 统一APP
+				index = Constant.PAYTYPE_WA;
+			} else if ("pay.weixin.native".equals(payType)) { // 微信扫码
+				index = Constant.PAYTYPE_WS;
+			} else if ("pay.weixin.jspay".equals(payType)) { // 微信公众号
+				index = Constant.PAYTYPE_WP;
+			} else if ("pay.weixin.wappay".equals(payType)) { // 微信WAP
+				index = Constant.PAYTYPE_WW;
+			} else if ("pay.alipay.native".equals(payType)) { // 支付宝扫码
+				index = Constant.PAYTYPE_AS;
+			}  else if ("pay.tenpay.native".endsWith(payType)) { // qq钱包扫码
+				index = Constant.PAYTYPE_QS;
+			} else if ("pay.tenpay.jspay".endsWith(payType)) { // qq钱包公众号
+				index = Constant.PAYTYPE_QP;
 			}
-			FileIOUtils.wirteTxtFile(body, "/app/logs/pay-main/" + mark + "/" + channel + "/" + fileName + "." + dName + ".txt");
-			return true;
-		} catch (Exception ex) {
-			logger.error("写入回调信息失败！-" + mark, ex);
-			return false;
 		}
+		return index;
 	}
 }

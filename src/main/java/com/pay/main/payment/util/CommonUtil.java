@@ -43,40 +43,7 @@ public class CommonUtil {
 	/**
 	 * 根据下单规则传值，返回订单号
 	 */
-	public static String getOrderNo(String no) {
-		String name = null;
-		if (no.length() == 2) {
-			String temp = null;
-			char f = no.charAt(0);
-			char t = no.charAt(1);
-			if ('A' == f) { // 支付宝
-				temp = "AL";
-			} else if ('W' == f) { // 微信
-				temp = "WX";
-			} else if ('Y' == f) { // 易联
-				temp = "YL";
-			} else if ('Q' == f) { // QQ
-				temp = "QQ";
-			}
-			name = payTypeName(temp, t);
-		}
-		return name;
-	}
-
-	/**
-	 * 根据下单规则，拼接订单号
-	 */
-	private static String payTypeName(String temp, char t) {
-		String typeName = null;
-		if ('A' == t) { // APP
-			typeName = DataFormatUtil.getONLYID32(temp + "APP");
-		} else if ('S' == t) { // SCAN 扫码
-			typeName = DataFormatUtil.getONLYID32(temp + "SCA");
-		} else if ('P' == t) { // PUB 公众号
-			typeName = DataFormatUtil.getONLYID32(temp + "PUB");
-		} else if ('W' == t) { // PUB 公众号
-			typeName = DataFormatUtil.getONLYID32(temp + "WAP");
-		}
-		return typeName;
+	public static String getOrderNo() {
+		return DataFormatUtil.getONLYID32();
 	}
 }
