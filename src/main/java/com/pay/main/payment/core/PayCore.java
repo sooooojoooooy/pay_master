@@ -280,7 +280,7 @@ public class PayCore {
 				Map<String, Object> rtnData = DataProcessUtil.convertBeanNotNullToMap(vo);
 				rtnData.remove("sign"); // 删除sign
 				logger.info("查询信息需要加密数据：" + params);
-				String DataTextLink = DataProcessUtil.textLink(params, false); // 拼接字符串
+				String DataTextLink = DataProcessUtil.textLink(rtnData, false); // 拼接字符串
 				String DataSign = EncryptionUtil.md5s(DataTextLink + "&" + userInfo.getUlSign());
 				rtnData.put("sign", DataSign); // 添加生成的sign
 				return rtnData;
