@@ -49,7 +49,6 @@ public class PayItemController extends MybatisPaging {
         try {
             List<PayChannel> rtnList = payChannelService.getSelectItem(session.getUlMerId(), startDate, endDate,payType);
             Map<String, Object> result = new HashMap<>();
-            makeData(rtnList);
             result.put("state", true);
             result.put("data", rtnList);
             return result;
@@ -69,7 +68,6 @@ public class PayItemController extends MybatisPaging {
         try {
             List<PayChannel> rtnList = payChannelService.getSelectOne(session.getUlMerId(), merNo, platformNo,payNo);
             Map<String, Object> result = new HashMap<>();
-            makeData(rtnList);
             result.put("state", true);
             result.put("data", rtnList);
             return result;
@@ -89,7 +87,6 @@ public class PayItemController extends MybatisPaging {
         try {
             List<PayChannel> rtnList = payChannelService.getReCallback(session.getUlMerId());
             Map<String, Object> result = new HashMap<>();
-            makeData(rtnList);
             result.put("state", true);
             result.put("data", rtnList);
             return result;
@@ -99,15 +96,6 @@ public class PayItemController extends MybatisPaging {
         }
     }
 
-    private void makeData(List<PayChannel> rtnList) {
-        SimpleDateFormat formatter = new SimpleDateFormat ("yyyy/MM/dd HH:mm:ss");
-        for (PayChannel item:rtnList) {
-            item.setStrPayTime(formatter.format(item.getpTime()));
-            item.setStrCreateTime(formatter.format(item.getCreateTime()));
-            item.setStrPayType(getpayType(item.getpType()));
-            item.setStrState(getPayState(item.getpState()));
-        }
-    }
 
     public static String getpayType(int payType) {
         switch (payType) {

@@ -16,4 +16,5 @@ public interface IUserLoginService {
 	Map<String,Object> changePwd(String oldPassWord, String newPassWord, String name);
 
 
+	UserLogin getUserMsg(String name);
 }

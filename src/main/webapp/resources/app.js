@@ -259,122 +259,18 @@ app.controller('oneOrderController', function ($scope, $http,$filter) {
         $("#table").bootstrapTable("load", data)
     }
 });
-app.controller('reCallbackController', function ($scope, $http,$filter) {
-    $("#table").bootstrapTable({
-        striped: true,//是否显示行间隔色
-        cache: false, //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
-        sortOrder: "asc",                   //排序方式
-        sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
-        pagination: true,                   //是否显示分页（*）
-        sortable: true,                     //是否启用排序
-        showPaginationSwitch: true,
-        pageNumber: 1,                       //初始化加载第一页，默认第一页
-        pageSize: 10,                       //每页的记录行数（*）
-        pageList: [10, 20, 30],        //可供选择的每页的行数（*）
-        showColumns: true,
-        clickToSelect: true,                //是否启用点击选中行
-        cardView: false,                    //是否显示详细视图
-        detailView: false,                   //是否显示父子表
-        columns: [{
-            checkbox: true
-        }, {
-            field: 'merId',
-            title: '商户号'
-        }, {
-            field: 'pTitle',
-            title: '商品描述'
-        }, {
-            field: 'merchantNo',
-            title: '商户订单号'
-        }, {
-            field: 'tradeNo',
-            title: '平台订单号'
-        }, {
-            field: 'wechatNo',
-            title: '支付订单号'
-        }, {
-            field: 'notifyState',
-            title: '回调状态',
-            formatter: function (value) {
-                if (value == 1) {
-                    return '回调成功';
-                } else {
-                    return '回调失败';
-                }
-            }
-        }, {
-            field: 'pType',
-            title: '支付类型',
-            formatter: function (value) {
-                switch (value) {
-                    case 1:
-                        return "微信APP";
-                    case 2:
-                        return "微信扫码";
-                    case 3:
-                        return "微信公众号";
-                    case 4:
-                        return "微信WAP";
-                    case 5:
-                        return "其他";
-                    case 6:
-                        return "支付宝APP";
-                    case 7:
-                        return "支付宝扫码";
-                    case 8:
-                        return "支付宝WAP";
-                    default:
-                        return "其他";
-                }
-            }
-        }, {
-            field: 'pFee',
-            title: '交易金额'
-        }, {
-            field: 'pState',
-            title: '支付状态',
-            formatter: function (value) {
-                if (value == 1) {
-                    return '支付成功';
-                } else {
-                    return '支付失败';
-                }
-            }
-        }, {
-            field: 'createTime',
-            title: '订单创建时间',
-            formatter: function (value) {
-                return $filter('date')(value,'yyyy-MM-dd HH:mm:ss');
-            }
-        }, {
-            field: 'pTime',
-            title: '订单交易时间',
-            formatter: function (value) {
-                return $filter('date')(value,'yyyy-MM-dd HH:mm:ss');
-            }
-        }]
-    });
-    $scope.select = function () {
+app.controller('reCallbackController', function ($scope, $http) {
+    $scope.init = function () {
         $http({
-            url: "select/reCallback",
+            url: "login/userMsg",
             contentType: "application/x-www-form-urlencoded",
             method: 'POST'
         }).success(function (ret) {
-            if (ret.state) {
-                $scope.totalData = ret;
-                $scope.displayData(ret.data)
-            } else {
-                alert(ret.errorMsg)
+            if (ret.state == 200) {
+                $scope.data = ret.data;
             }
         }).error(function (data) {
         });
-    };
-    $scope.displayData = function (data) {
-        $("#table").bootstrapTable("load", data)
-    }
-    $scope.callback = function () {
-        var a= $("#table").bootstrapTable('getSelections');
-        alert(a)
     }
 });
 app.controller('totalController', function ($scope, $http) {

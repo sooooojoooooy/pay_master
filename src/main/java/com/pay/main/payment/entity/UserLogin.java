@@ -14,6 +14,13 @@ public class UserLogin {
 	private Integer ulGroup;
 	private Integer ulPaystate;
 	private String ulNotify;
+	private String name;
+	private String phone;
+	private String pdType;
+	private String shoukuanren;
+	private String kaihuhang;
+	private String banktype;
+	private String zhanghu;
 
 	public Integer getId() {
 		return id;
@@ -28,7 +35,7 @@ public class UserLogin {
 	}
 
 	public void setUlUsername(String ulUsername) {
-		this.ulUsername = ulUsername == null ? null : ulUsername.trim();
+		this.ulUsername = ulUsername;
 	}
 
 	public String getUlPassword() {
@@ -36,7 +43,7 @@ public class UserLogin {
 	}
 
 	public void setUlPassword(String ulPassword) {
-		this.ulPassword = ulPassword == null ? null : ulPassword.trim();
+		this.ulPassword = ulPassword;
 	}
 
 	public String getUlMerId() {
@@ -45,6 +52,14 @@ public class UserLogin {
 
 	public void setUlMerId(String ulMerId) {
 		this.ulMerId = ulMerId;
+	}
+
+	public String getUlSign() {
+		return ulSign;
+	}
+
+	public void setUlSign(String ulSign) {
+		this.ulSign = ulSign;
 	}
 
 	public Integer getUlGroup() {
@@ -63,14 +78,6 @@ public class UserLogin {
 		this.ulPaystate = ulPaystate;
 	}
 
-	public String getUlSign() {
-		return ulSign;
-	}
-
-	public void setUlSign(String ulSign) {
-		this.ulSign = ulSign;
-	}
-
 	public String getUlNotify() {
 		return ulNotify;
 	}
@@ -78,5 +85,62 @@ public class UserLogin {
 	public void setUlNotify(String ulNotify) {
 		this.ulNotify = ulNotify;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getPdType() {
+		return pdType;
+	}
+
+	public void setPdType(String pdType) {
+		this.pdType = pdType;
+	}
+
+	public String getShoukuanren() {
+		return shoukuanren;
+	}
+
+	public void setShoukuanren(String shoukuanren) {
+		this.shoukuanren = shoukuanren;
+	}
+
+	public String getKaihuhang() {
+		return kaihuhang;
+	}
+
+	public void setKaihuhang(String kaihuhang) {
+		this.kaihuhang = kaihuhang;
+	}
+
+	public String getBanktype() {
+		return banktype;
+	}
+
+	public void setBanktype(String banktype) {
+		this.banktype = banktype;
+	}
+
+	public String getZhanghu() {
+		return zhanghu;
+	}
+
+	public void setZhanghu(String zhanghu) {
+		this.zhanghu = zhanghu;
+	}
+
 
 }

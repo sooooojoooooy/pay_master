@@ -16,8 +16,9 @@
     <mvc:resources location="/*.html" mapping="/**.html" />
     <mvc:resources location="/resources/*" mapping="/resources/**" />
 	<mvc:resources location="/*.txt" mapping="/**.txt" />
-    
-    <!-- text页面 -->
+	<mvc:resources location="/doc/**" mapping="/doc/**" />
+
+	<!-- text页面 -->
     <mvc:resources location="/temp/**" mapping="/temp/**" />
 
 	<!-- 添加注解驱动  启动SpringMVC的注解功能，它会自动注册HandlerMapping、HandlerAdapter、ExceptionResolver的相关实例 -->

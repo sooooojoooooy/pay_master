@@ -24,7 +24,7 @@ public class DataFormatUtil {
 	 */
 	public static String getONLYID32() {
 		String uuid = UUID.randomUUID().toString().replace("-", "");
-		StringBuffer sb = new StringBuffer();
+		StringBuffer sb = new StringBuffer("4070");
 		Date currentTime = new Date();
 		sb.append(formatter2.format(currentTime));
 		sb.append(uuid.substring(0, 32 - sb.length()));

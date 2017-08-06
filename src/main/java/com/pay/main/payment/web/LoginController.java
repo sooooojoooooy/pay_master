@@ -1,5 +1,6 @@
 package com.pay.main.payment.web;
 
+import com.pay.main.payment.dao.MybatisPaging;
 import com.pay.main.payment.entity.UserLogin;
 import com.pay.main.payment.service.IUserLoginService;
 import com.pay.main.payment.util.CaptchaUtils;
@@ -27,7 +28,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("login")
-public class LoginController {
+public class LoginController extends MybatisPaging{
 	private static Log logger = LogFactory.getLog(LoginController.class);
 	@Autowired
 	IUserLoginService userLoginService;
@@ -108,6 +109,25 @@ public class LoginController {
 			String name = userlogin.getUlUsername();
 			try {
 				return userLoginService.changePwd(oldPassWord,newPassWord,name);
+			}catch (Exception ex){
+				ex.printStackTrace();
+			}
+		}
+		rtnMap.put("state", 404);
+		rtnMap.put("msg", "登录超时请重新登录！");
+		return rtnMap;
+	}
+
+	@RequestMapping(value = "userMsg", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> userMsg(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession();
+		Map<String, Object> rtnMap = new HashMap<>();
+		// 判断验证码是否为空
+		UserLogin userlogin = null != session.getAttribute(LoginUtils.LOGIN_USERINFO) ? (UserLogin)session.getAttribute(LoginUtils.LOGIN_USERINFO) : null;
+		if (null != userlogin) {
+			String name = userlogin.getUlUsername();
+			try {
+				return ReturnUtils.successInfo(userLoginService.getUserMsg(name));
 			}catch (Exception ex){
 				ex.printStackTrace();
 			}

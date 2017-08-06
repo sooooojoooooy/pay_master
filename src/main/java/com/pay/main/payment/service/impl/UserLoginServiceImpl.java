@@ -74,6 +74,17 @@ public class UserLoginServiceImpl implements IUserLoginService {
     }
 
     @Override
+    public UserLogin getUserMsg(String name) {
+        UserLogin selectByPrimaryKey = null;
+        try {
+            selectByPrimaryKey = userLoginMapper.selectByPrimaryKey(name);
+        } catch (Exception ex) {
+            logger.error("查询用户状态失败：", ex);
+        }
+        return selectByPrimaryKey;
+    }
+
+    @Override
     public UserLogin getByPrimaryKey(String ulMerId) {
         UserLogin selectByPrimaryKey = null;
         try {
