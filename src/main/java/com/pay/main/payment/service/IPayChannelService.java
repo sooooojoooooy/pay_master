@@ -28,4 +28,6 @@ public interface IPayChannelService {
 	List<PayChannel> getSelectOne(String ulMerId, String merNo, String platformNo, String payNo);
 
     List<PayChannel> getReCallback(String ulMerId);
+
+	PayChannel getInquiry(String out_trade_no);
 }

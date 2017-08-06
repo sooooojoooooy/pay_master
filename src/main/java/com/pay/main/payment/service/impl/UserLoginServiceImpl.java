@@ -84,6 +84,7 @@ public class UserLoginServiceImpl implements IUserLoginService {
         return selectByPrimaryKey;
     }
 
+
     @Override
     public UserLogin getByPrimaryKey(String ulMerId) {
         UserLogin selectByPrimaryKey = null;

@@ -17,4 +17,5 @@ public interface IUserLoginService {
 
 
 	UserLogin getUserMsg(String name);
+
 }

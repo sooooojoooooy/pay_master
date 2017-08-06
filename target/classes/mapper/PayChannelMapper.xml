@@ -37,6 +37,12 @@
         from pay_channel
         where trade_no = #{tradeNo,jdbcType=VARCHAR}
     </select>
+    <select id="getInquiry" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from pay_channel
+        where merchant_no = #{outTradeNo,jdbcType=VARCHAR}
+    </select>
     <select id="selectItem" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>

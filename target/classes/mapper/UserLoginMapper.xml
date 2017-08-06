@@ -10,10 +10,18 @@
 		<result column="ul_group" property="ulGroup" jdbcType="TINYINT" />
 		<result column="ul_paystate" property="ulPaystate" jdbcType="TINYINT" />
 		<result column="ul_notify" property="ulNotify" jdbcType="TINYINT" />
+		<result column="ul_remarks" property="name" jdbcType="VARCHAR" />
+		<result column="ul_phone" property="phone" jdbcType="VARCHAR" />
+		<result column="pd_type" property="pdType" jdbcType="VARCHAR" />
+		<result column="shoukuanren" property="shoukuanren" jdbcType="VARCHAR" />
+		<result column="kaihuhang" property="kaihuhang" jdbcType="VARCHAR" />
+		<result column="banktype" property="banktype" jdbcType="VARCHAR" />
+		<result column="zhanghu" property="zhanghu" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		id, ul_username, ul_merId,ul_sign, ul_group, ul_paystate, ul_notify
+		id, ul_username, ul_merId,ul_sign, ul_group, ul_paystate, ul_notify,ul_remarks,
+		ul_phone,pd_type,shoukuanren,kaihuhang,banktype,zhanghu
 	</sql>
 
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap">

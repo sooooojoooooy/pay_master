@@ -233,4 +233,60 @@ public class PayCore {
 		}
 		return index;
 	}
+
+	public Map<String, Object> getInquiry(HttpServletRequest request, String keys) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		String[] key = null != keys ? keys.split(",") : null;
+		// 遍历保存传参数据
+		for (int i = 0; i < key.length; i++) {
+			String onKey = key[i];
+			params.put(onKey, request.getParameter(onKey));
+		}
+		// 打印传值
+		logger.info("查询接口传值:" + params.toString());
+		UserLogin userInfo = userLoginService.getByPrimaryKey(params.get("mch_id").toString());
+		Integer ulPaystate = 0;
+		ulPaystate = null != userInfo ? userInfo.getUlPaystate() : 0;
+		if (ulPaystate != 1) {
+			return ReturnUtil.returnFail("非法商户号！",1001);
+		}
+
+		// 判断签名正确性
+		Map<String, Object> map = DataProcessUtil.removeNullMap(params);
+		map.remove("sign");
+		String textLink = DataProcessUtil.textLink(map, false); // 拼接字符串
+		String md5s = EncryptionUtil.md5s(textLink + "&" + userInfo.getUlSign());
+		String sign = params.get("sign") + "";
+		if (!md5s.equals(sign)) {
+			String signStr = textLink + "&" + userInfo.getUlSign();
+			logger.info("生成签名字符串: " + signStr + " ==> " + md5s + " : " + sign);
+			return ReturnUtil.returnFail("签名错误！",1004);
+		}
+		try{
+			PayChannel payChannel = payChannelService.getInquiry(params.get("out_trade_no").toString());
+			if (payChannel == null){
+				return ReturnUtil.returnFail("未查询到该订单！",1011);
+			}else {
+				String merNo = payChannel.getMerchantNo();
+				String title = payChannel.getpTitle();
+				String attach = payChannel.getpAttach();
+				String prince = payChannel.getpFee() + "";
+				String type = payChannel.getpType() + "";
+				String merId = payChannel.getMerId();
+				String payNo = payChannel.getWechatNo();
+				String state = payChannel.getpState().toString();
+				String platformNo = payChannel.getTradeNo();
+				RMSendNotifyVO vo = new RMSendNotifyVO(merId,merNo,attach,title,state,prince,platformNo,payNo,type,null);
+				Map<String, Object> rtnData = DataProcessUtil.convertBeanNotNullToMap(vo);
+				rtnData.remove("sign"); // 删除sign
+				logger.info("查询信息需要加密数据：" + params);
+				String DataTextLink = DataProcessUtil.textLink(params, false); // 拼接字符串
+				String DataSign = EncryptionUtil.md5s(DataTextLink + "&" + userInfo.getUlSign());
+				rtnData.put("sign", DataSign); // 添加生成的sign
+				return rtnData;
+			}
+		}catch (Exception ex){
+			return ReturnUtil.returnFail("未知错误！",1099);
+		}
+	}
 }

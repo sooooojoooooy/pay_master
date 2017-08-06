@@ -117,4 +117,15 @@ public class PayChannelServiceImpl implements IPayChannelService {
         }
         return payChannel;
     }
+
+    @Override
+    public PayChannel getInquiry(String out_trade_no) {
+        PayChannel payChannel = null;
+        try {
+            payChannel = payChannelMapper.getInquiry(out_trade_no);
+        } catch (Exception ex) {
+            logger.error("PayChannelServiceImpl-selectByUserPwd is error:", ex);
+        }
+        return payChannel;
+    }
 }

@@ -29,4 +29,6 @@ public interface PayChannelMapper {
             , @Param("platformNo")String platformNo, @Param("payNo") String payNo);
 
     List<PayChannel> getReCallback(@Param("merId")String ulMerId);
+
+    PayChannel getInquiry(@Param("outTradeNo")String out_trade_no);
 }

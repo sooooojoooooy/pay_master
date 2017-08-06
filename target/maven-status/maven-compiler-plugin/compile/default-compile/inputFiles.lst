@@ -19,6 +19,7 @@
 /Users/apple/Documents/JavaWebSpace/pay_master/src/main/java/com/pay/main/payment/dao/PayChannelMapper.java
 /Users/apple/Documents/JavaWebSpace/pay_master/src/main/java/com/pay/main/payment/thread/SendNotifyThread.java
 /Users/apple/Documents/JavaWebSpace/pay_master/src/main/java/com/pay/main/payment/dao/core/DynamicDataSource.java
+/Users/apple/Documents/JavaWebSpace/pay_master/src/main/java/com/pay/main/payment/web/PayItemController.java
 /Users/apple/Documents/JavaWebSpace/pay_master/src/main/java/com/pay/main/payment/entity/UserLogin.java
 /Users/apple/Documents/JavaWebSpace/pay_master/src/main/java/com/pay/main/payment/dao/UserLoginMapper.java
 /Users/apple/Documents/JavaWebSpace/pay_master/src/main/java/com/pay/main/payment/service/IUserInfoService.java

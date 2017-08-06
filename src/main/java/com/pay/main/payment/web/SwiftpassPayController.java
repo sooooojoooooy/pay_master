@@ -5,6 +5,7 @@ import com.pay.main.payment.core.SwiftpassPayCore;
 import com.pay.main.payment.service.ISwitchMerchantService;
 import com.pay.main.payment.util.ReturnUtil;
 import com.pay.main.payment.util.XmlUtils;
+import com.pay.main.payment.vo.RMSendNotifyVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,14 @@ public class SwiftpassPayController {
 			Map<String, String> dataMap = (Map<String, String>) params.get("rtnMsg");
 			return spPayCore.placeOrder(dataMap);
 		}
+		return params;
+	}
+
+	@RequestMapping(value = "inquiry", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> inquiry(HttpServletRequest request, HttpServletResponse resp) {
+		logger.info("支付下单-威富通!");
+		String keys = "mch_id,out_trade_no,sign";
+		Map<String, Object> params = payCore.getInquiry(request, keys);
 		return params;
 	}
 
