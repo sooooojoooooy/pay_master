@@ -36,7 +36,7 @@ public class SwiftpassPayController {
 	@RequestMapping(value = "gateway", method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> gateway(HttpServletRequest request, HttpServletResponse resp) {
 		logger.info("支付下单-威富通!");
-		String keys = "service,mch_id,out_trade_no,body,attach,total_fee,notify_url,sign";
+		String keys = "service,mch_id,out_trade_no,body,attach,total_fee,notify_url,callback_url,sign";
 		Map<String, Object> params = payCore.getRequestParameter(request, keys);
 
 		if ("1000".equals(params.get("rtnCode"))) {
@@ -54,7 +54,7 @@ public class SwiftpassPayController {
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/notifyUrl", method = RequestMethod.POST)
+	@RequestMapping(value = "/callback", method = RequestMethod.POST)
 	public @ResponseBody String notifyUrl(HttpServletRequest request) {
 		logger.info("接受回调信息-威富通!");
 		try {

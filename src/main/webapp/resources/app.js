@@ -266,7 +266,7 @@ app.controller('reCallbackController', function ($scope, $http) {
             contentType: "application/x-www-form-urlencoded",
             method: 'POST'
         }).success(function (ret) {
-            if (ret.state == 200) {
+            if (ret.state) {
                 $scope.data = ret.data;
             }
         }).error(function (data) {

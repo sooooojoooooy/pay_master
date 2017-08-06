@@ -127,7 +127,11 @@ public class LoginController extends MybatisPaging{
 		if (null != userlogin) {
 			String name = userlogin.getUlUsername();
 			try {
-				return ReturnUtils.successInfo(userLoginService.getUserMsg(name));
+				UserLogin userlogin1 = userLoginService.getUserMsg(name);
+				Map<String, Object> result = new HashMap<>();
+				result.put("state", true);
+				result.put("data", userlogin1);
+				return result;
 			}catch (Exception ex){
 				ex.printStackTrace();
 			}

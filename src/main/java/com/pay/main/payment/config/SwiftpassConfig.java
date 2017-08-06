@@ -12,10 +12,14 @@ public class SwiftpassConfig {
     public static String req_url;
     // 回调地址
     public static String notify_url;
-    
+    public static String merId;
+    public static String Key;
+
 	static {
     	PropertyUtil proper = PropertyUtil.getInstance("properties/pay");
 		req_url = proper.getProperty("swiftpass.req_url").trim();
 		notify_url = proper.getProperty("swiftpass.notify_url").trim();
+		merId = proper.getProperty("swiftpass.merId").trim();
+		Key = proper.getProperty("swiftpass.Key").trim();
 	}
 }
