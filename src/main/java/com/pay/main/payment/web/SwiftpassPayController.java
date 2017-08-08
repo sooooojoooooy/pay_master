@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 /**
@@ -37,6 +38,11 @@ public class SwiftpassPayController {
 	@RequestMapping(value = "gateway", method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> gateway(HttpServletRequest request, HttpServletResponse resp) {
 		logger.info("支付下单-威富通!");
+		try {
+			request.setCharacterEncoding("utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		String keys = "service,mch_id,out_trade_no,body,attach,total_fee,notify_url,callback_url,sign";
 		Map<String, Object> params = payCore.getRequestParameter(request, keys);
 

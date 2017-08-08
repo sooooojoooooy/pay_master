@@ -58,7 +58,7 @@ public class SwiftpassPayCore {
         String SIGN_KEY = null; // 签名KEY
         SwitchMerchant selectSM = null;
         // 2.1 数据入库
-        boolean bool = payCore.savePayOrder(dataMap, false);
+        boolean bool = payCore.savePayOrder(dataMap, true);
         if (!bool) {
             return ReturnUtil.returnFail("下单参数有误！", 1005);
         }
@@ -72,7 +72,7 @@ public class SwiftpassPayCore {
         orderMap.put("sign_type", "MD5");
         orderMap.put("mch_id", SwiftpassConfig.merId);
         orderMap.put("out_trade_no", dataMap.get("orderNo"));
-        orderMap.put("body", dataMap.get("body"));
+        orderMap.put("body", "订单充值");
         orderMap.put("attach", dataMap.get("attach"));
         orderMap.put("total_fee", dataMap.get("total_fee"));
         orderMap.put("mch_create_ip", dataMap.get("ip"));
@@ -171,7 +171,9 @@ public class SwiftpassPayCore {
         DateFormat fmt = new SimpleDateFormat("yyyyMMddHHmmss");
         Date pDate = new Date();
         try {
-            pDate = fmt.parse(vo.get("time_end"));
+            if (vo.get("time_end")!=null) {
+                pDate = fmt.parse(vo.get("time_end"));
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
