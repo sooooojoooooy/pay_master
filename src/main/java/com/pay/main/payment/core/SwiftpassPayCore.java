@@ -1,5 +1,6 @@
 package com.pay.main.payment.core;
 
+import com.alibaba.fastjson.JSONObject;
 import com.pay.main.payment.config.Constant;
 import com.pay.main.payment.config.SwiftpassConfig;
 import com.pay.main.payment.entity.PayChannel;
@@ -62,27 +63,33 @@ public class SwiftpassPayCore {
         if (!bool) {
             return ReturnUtil.returnFail("下单参数有误！", 1005);
         }
-
         // 创建下单信息
-        SortedMap<String, String> orderMap = new TreeMap<String, String>();
-        orderMap.put("service", dataMap.get("service"));
-        orderMap.put("version", "2.0");
-        orderMap.put("total_fee", dataMap.get("total_fee"));
-        orderMap.put("charset", "UTF-8");
-        orderMap.put("sign_type", "MD5");
-        orderMap.put("mch_id", SwiftpassConfig.merId);
-        orderMap.put("out_trade_no", dataMap.get("orderNo"));
-        orderMap.put("body", "订单充值");
-        orderMap.put("attach", dataMap.get("attach"));
-        orderMap.put("total_fee", dataMap.get("total_fee"));
-        orderMap.put("mch_create_ip", dataMap.get("ip"));
-        orderMap.put("notify_url", SwiftpassConfig.notify_url);
-        orderMap.put("nonce_str", String.valueOf(new Date().getTime()));
-        orderMap.put("callback_url", dataMap.get("callback_url"));
-        orderMap.put("device_info", "iOS_WAP");
-        orderMap.put("mch_app_name", "AppStore");
-        orderMap.put("mch_app_id", "http://www.baidu.com");
-
+        SortedMap<String, Object> orderMap = new TreeMap<String, Object>();
+        orderMap.put("amount", dataMap.get("total_fee"));
+        orderMap.put("backurl", dataMap.get("callback_url"));
+        orderMap.put("desc", "订单充值");
+        orderMap.put("extra", dataMap.get("orderNo"));
+        orderMap.put("merch", SwiftpassConfig.merId);
+        orderMap.put("notifyurl", SwiftpassConfig.notify_url);
+        orderMap.put("product", "订单充值");
+        orderMap.put("type", "12");
+//        orderMap.put("service", dataMap.get("service"));
+//        orderMap.put("version", "2.0");
+//        orderMap.put("total_fee", dataMap.get("total_fee"));
+//        orderMap.put("charset", "UTF-8");
+//        orderMap.put("sign_type", "MD5");
+//        orderMap.put("mch_id", SwiftpassConfig.merId);
+//        orderMap.put("out_trade_no", dataMap.get("orderNo"));
+//        orderMap.put("body", "订单充值");
+//        orderMap.put("attach", dataMap.get("attach"));
+//        orderMap.put("total_fee", dataMap.get("total_fee"));
+//        orderMap.put("mch_create_ip", dataMap.get("ip"));
+//        orderMap.put("notify_url", SwiftpassConfig.notify_url);
+//        orderMap.put("nonce_str", String.valueOf(new Date().getTime()));
+//        orderMap.put("callback_url", dataMap.get("callback_url"));
+//        orderMap.put("device_info", "iOS_WAP");
+//        orderMap.put("mch_app_name", "AppStore");
+//        orderMap.put("mch_app_id", "http://www.baidu.com");
         // 生成下单签名
         Map<String, String> params = SwiftpassPayCore.paraFilter(orderMap);
         StringBuilder buf = new StringBuilder();
@@ -92,21 +99,19 @@ public class SwiftpassPayCore {
         orderMap.put("sign", onSign);
 
         try {
-            String xml = XmlUtils.parseXML(orderMap);
-            logger.error("威富通下单报文:", xml);
-
             // 下单请求参数
-            byte[] httpPost2 = HttpUtil.httpPost(SwiftpassConfig.req_url, xml);
-            Map<String, String> map = XmlUtils.toMap(httpPost2, "UTF-8");
-            logger.error("威富通下单返回信息", map.toString());
+            String httpPost2 = HttpUtil.doPost(SwiftpassConfig.req_url, orderMap, "utf-8");
+            Map map = null;
+            if (httpPost2 != null) {
+                map = JSONObject.parseObject(httpPost2, Map.class);
+            } else {
+                return ReturnUtil.returnFail("下单参数有误！", 1005);
+            }
+            logger.error("威富通下单返回信息", httpPost2);
             // 拼接返回信息
             Map<String, Object> resultMap = new HashMap<String, Object>();
-            resultMap.put("token_id", map.get("token_id"));
-            resultMap.put("code_url", map.get("code_url"));
-            resultMap.put("code_img_url", map.get("code_img_url"));
-            resultMap.put("message", map.get("message"));
-            resultMap.put("err_msg", map.get("err_msg"));
-            resultMap.put("pay_info", map.get("pay_info"));
+            resultMap.put("pay_info", map.get("payurl"));
+            resultMap.put("code_url", map.get("payurl"));
             return ReturnUtil.returnInfo(DataProcessUtil.removeNullMap(resultMap));
         } catch (Exception ex) {
             logger.error("威富通下单错误：", ex);
@@ -114,10 +119,9 @@ public class SwiftpassPayCore {
         }
     }
 
-    public boolean getAutograph(String resString) throws Exception {
-        logger.info("回调信息-威富通：" + resString);
-        if (resString != null && !"".equals(resString)) {
-            Map<String, String> map = XmlUtils.toMap(resString.getBytes(), "utf-8");
+    public boolean getAutograph(Map<String, String> map) throws Exception {
+        logger.info("回调信息-威富通：" + map);
+        if (map != null) {
             if (map.containsKey("sign")) {
                 boolean result = false;
                 if (map.containsKey("sign")) {
@@ -132,14 +136,7 @@ public class SwiftpassPayCore {
                 if (!result) {
                     logger.info("SwiftpassPay验证签名不通过");
                 } else {
-                    String status = map.get("status");
-                    if (status != null && "0".equals(status)) {
-                        String result_code = map.get("result_code");
-                        if (result_code != null && "0".equals(result_code)) {
-                            // 此处可以在添加相关处理业务，校验通知参数中的商户订单号out_trade_no和金额total_fee是否和商户业务系统的单号和金额是否一致，一致后方可更新数据库表中的记录。
-                            return setSuccPayInfo(map);
-                        }
-                    }
+                    return setSuccPayInfo(map);
                 }
             }
         }
@@ -153,30 +150,20 @@ public class SwiftpassPayCore {
      * @return
      */
     public boolean setSuccPayInfo(Map<String, String> vo) {
-        String paySign = vo.get("trade_type");
-        Integer payType = getPayTypeMarkNum(paySign);
-        String orderNo = vo.get("out_trade_no");
-        Float fee = Float.parseFloat(vo.get("total_fee")) / 100;
+        Integer payType = 4;
+        String orderNo = vo.get("extra");
+        Float fee = Float.parseFloat(vo.get("amount")) / 100;
         // 修改订单信息
         Date date = new Date();
         PayChannel payChannel = new PayChannel();
         payChannel.setTradeNo(orderNo); // 订单号(自己 )
-        payChannel.setChannelNo(vo.get("transaction_id")); //
-        payChannel.setWechatNo(vo.get("out_transaction_id")); // 微信订单号
-
+        payChannel.setChannelNo(vo.get("order")); //
+        payChannel.setWechatNo(vo.get("order")); // 微信订单号
         payChannel.setpType(payType); // 支付方式
         payChannel.setpState(1); // 支付状态为成功
         payChannel.setpFee(fee); // 金额
         payChannel.setModifiedTime(date);
-        DateFormat fmt = new SimpleDateFormat("yyyyMMddHHmmss");
         Date pDate = new Date();
-        try {
-            if (vo.get("time_end")!=null) {
-                pDate = fmt.parse(vo.get("time_end"));
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         payChannel.setpTime(pDate);
         // 修改数据库值
         boolean bool = false;
@@ -224,13 +211,13 @@ public class SwiftpassPayCore {
      * @param sArray
      * @return
      */
-    public static Map<String, String> paraFilter(Map<String, String> sArray) {
+    public static Map<String, String> paraFilter(Map<String, Object> sArray) {
         Map<String, String> result = new HashMap<String, String>(sArray.size());
         if (sArray == null || sArray.size() <= 0) {
             return result;
         }
         for (String key : sArray.keySet()) {
-            String value = sArray.get(key);
+            String value = (String) sArray.get(key);
             if (value == null || value.equals("") || key.equalsIgnoreCase("sign")) {
                 continue;
             }

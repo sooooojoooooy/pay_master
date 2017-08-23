@@ -61,6 +61,7 @@ public class HttpUtil {
 		requestConfig = configBuilder.build();
 	}
 
+
 	public static byte[] httpPost(String var0, String var1) {
 		if (var0 != null && var0.length() != 0) {
 			CloseableHttpClient var2 = HttpClients.custom().setSSLSocketFactory(createSSLConnSocketFactory())

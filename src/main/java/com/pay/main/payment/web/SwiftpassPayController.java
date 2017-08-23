@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -69,14 +71,19 @@ public class SwiftpassPayController {
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/callback", method = RequestMethod.POST)
+	@RequestMapping(value = "/callback", method = RequestMethod.GET)
 	public @ResponseBody String notifyUrl(HttpServletRequest request) {
 		logger.info("接受回调信息-威富通!");
 		try {
-			request.setCharacterEncoding("utf-8");
-			String resString = XmlUtils.parseRequst(request);
-			System.err.println(resString);
-			boolean autograph = spPayCore.getAutograph(resString);
+			Map<String, String> params = new HashMap<String, String>();
+			Enumeration<?> enu = request.getParameterNames();
+			while (enu.hasMoreElements()) {
+				String paraName = (String) enu.nextElement();
+				params.put(paraName, request.getParameter(paraName));
+			}
+			// 打印信息
+			logger.info("回调信息-掌游APP：" + params);
+			boolean autograph = spPayCore.getAutograph(params);
 			if (autograph) {
 				return "success";
 			}else {
